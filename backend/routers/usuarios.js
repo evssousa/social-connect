@@ -12,7 +12,7 @@ router.post('/login', (req, res) => {
 
     // Verifica se email e senha batem com os valores de teste
     if (email === 'admin@email.com' && senha === '123456') {
-        return res.status(200).json({ mensagem: 'Login realizado com sucesso!' })
+        return res.status(200).json({ mensagem: `Login realizado com sucesso. Bem-vindo, ${email}!` })
     } else {
         return res.status(401).json({ mensagem: 'Credenciais inválidas.'})
     }

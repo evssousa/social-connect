@@ -9,6 +9,7 @@ export default function Login() {
   const [mensagem, setMensagem] = useState('')
   const [erro, setErro] = useState('')
 
+  // Atualiza os campos do formulário
   function handleChange(e) {
     const { name, value } = e.target
     setForm((prev) => ({
@@ -17,31 +18,56 @@ export default function Login() {
     }))
   }
 
-  function handleSubmit(e) {
+  // Envia os dados para o backend
+  async function handleSubmit(e) {
     e.preventDefault()
     setMensagem('')
     setErro('')
 
+    try {
+      const resposta = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+      })
+
+      const dados = await resposta.json()
+
+      if (resposta.ok) {
+        setMensagem(dados.mensagem) // Login aceito
+        // Tudo certo
+        // setMensagem(`Bem-vindo, ${form.email}!`)
+      } else {
+        setErro(dados.mensagem || 'Erro desconhecido') // Login recusado
+      }
+    } catch (err) {
+      setErro('Erro de conexão com o servidor.')
+      console.error(err)
+    }
+
+    // ================================================================
     // Validação simples
     if (!form.email || !form.senha) {
       setErro('Preencha todos os campos.')
       return
     }
 
-    // Validação de email
+    // // Validação de email
     if (!form.email.includes('@') || !form.email.endsWith('.com')) {
       setErro('Formato de email inválido.')
       return
     }
 
-    // Validação de senha
+    // // Validação de senha
     if (form.senha.length < 6) {
       setErro('A senha deve ter no mínimo 6 caracteres.')
       return
     }
 
-    // Tudo certo
-    setMensagem(`Bem-vindo, ${form.email}!`)
+
+    // ================================================================
   }
 
   return (
