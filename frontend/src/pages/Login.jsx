@@ -39,8 +39,13 @@ export default function Login() {
 
       if (resposta.ok) {
         setMensagem(dados.mensagem) // Login aceito
+        
+        // Salvando no localStorage (mantém mesmo após recarregar a página)
+        localStorage.setItem("usuario_logado", "true")
+        
+        // Redireciona após login bem-sucedido (2segs)
         setTimeout(() => {
-          navigate("/feed") // Redireciona após login bem-sucedido (1seg)
+          navigate("/feed") 
         }, 2000)
       } else {
         setErro(dados.mensagem || "Erro desconhecido") // Login recusado
